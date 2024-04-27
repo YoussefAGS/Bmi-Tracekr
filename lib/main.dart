@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import 'bmi_app.dart';
+import 'features/auth/data/my_provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -13,7 +15,10 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp],
   ).then((_) {
-    runApp(const BmiTrackerApp());
+    runApp( ChangeNotifierProvider(
+        create:(context) => MyProvider(),
+        child: BmiTrackerApp()
+    ));
   });
 
 }
