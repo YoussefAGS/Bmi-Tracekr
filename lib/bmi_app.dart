@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,7 @@ class BmiTrackerApp extends StatelessWidget {
               );
             },
             onGenerateRoute: AppRoute.routes,
-            initialRoute: provider.firebaseUser != null ? AppRoute.dd : AppRoute.login,
+            initialRoute: FirebaseAuth.instance.currentUser != null ? AppRoute.RecentClac : AppRoute.login,
           ),
         );
       } else {

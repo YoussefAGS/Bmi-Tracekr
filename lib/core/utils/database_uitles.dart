@@ -18,4 +18,5 @@ class DatabaseUtils {
     var myUser = user.data();
     return myUser;
   }
+
 }

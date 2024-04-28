@@ -3,7 +3,9 @@ import 'package:bmitracker/features/auth/presentation/widgets/login/login_button
 import 'package:flutter/material.dart';
 import '../../../../../core/common/animations/animate_do.dart';
 import '../../../../../core/common/widgets/custom_text_field.dart';
+import '../../../../../core/routes/app_route.dart';
 import '../../../../../core/utils/app_regex.dart';
+import '../../../../../core/utils/loading.dart';
 import '../../../data/data_source/creat_account.dart';
 
 class LoginTextForm extends StatefulWidget {
@@ -76,7 +78,27 @@ class _LoginTextFormState extends State<LoginTextForm> {
   }
   void validatForm() async {
     if (formkey.currentState!.validate()) {
-      AuthDataSource.loginWithFirbaseAuth(emailController.text, passwordController.text);
+      // Show loading indicator
+      showLoadingDialog(context);
+      bool isAuth = await AuthDataSource.loginWithFirebaseAuth(
+        emailController.text,
+        passwordController.text,
+      );
+      // Hide loading indicator
+      Navigator.of(context).pop();
+
+      if (isAuth) {
+        // Navigate to Calculator screen if authentication is successful
+        context.pushReplacementNamed(AppRoute.RecentClac);
+      } else {
+        // Show error message if authentication fails
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('User information is not correct.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     }
   }
 }

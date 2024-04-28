@@ -1,11 +1,16 @@
 import 'package:bmitracker/core/extensions/context_extension.dart';
 import 'package:bmitracker/features/auth/presentation/widgets/sign_up/sign_up_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../core/common/animations/animate_do.dart';
 import '../../../../../core/common/widgets/custom_text_field.dart';
+import '../../../../../core/routes/app_route.dart';
 import '../../../../../core/utils/app_regex.dart';
+import '../../../../../core/utils/loading.dart';
 import '../../../data/data_source/creat_account.dart';
+import '../../../data/my_provider.dart';
 
 class SignUpTextForm extends StatefulWidget {
   const SignUpTextForm({super.key});
@@ -90,15 +95,39 @@ class _SignUpTextFormState extends State<SignUpTextForm> {
                 ))
             ,
             SizedBox(height: 20),
-            SignUpButton(onPressed: ValidatFoem)
+            SignUpButton(onPressed: ValidatForm)
           ],
         )
     );
 
   }
-  void ValidatFoem()async{
-    if(formkey.currentState!.validate()){
-      AuthDataSource.CreateAccountWithFirbaseAuth(emailController.text, passwordController.text,userNameController.text);
+  void ValidatForm() async {
+    if (formkey.currentState!.validate()) {
+      // Show loading indicator
+      showLoadingDialog(context);
+
+      bool isAuth = await AuthDataSource.createUserWithFirebaseAuth(
+        emailController.text,
+        passwordController.text,
+        userNameController.text,
+      );
+
+      // Hide loading indicator
+      Navigator.of(context).pop();
+
+      if (isAuth) {
+        // Navigate to Calculator screen if authentication is successful
+        context.pushReplacementNamed(AppRoute.RecentClac);
+      } else {
+        // Show error message if authentication fails
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('User information is not correct.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     }
   }
+
 }

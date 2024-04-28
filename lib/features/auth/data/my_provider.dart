@@ -6,7 +6,7 @@ import '../../../core/utils/database_uitles.dart';
 import 'model/user.dart';
 
 class MyProvider extends ChangeNotifier{
-  MyUser? myUser;
+  static MyUser? myUser;
   User? firebaseUser;
   MyProvider(){
   firebaseUser= FirebaseAuth.instance.currentUser;
